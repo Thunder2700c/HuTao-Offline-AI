@@ -10,7 +10,7 @@ From the Hugging Face file page, download exactly:
 
 Repository: <https://huggingface.co/mradermacher/Qwen3-1.7B-abliterated-GGUF/tree/main>
 
-The listed size is about 940 MB. Save it in Android's Download folder. Never upload this file to this GitHub repository.
+The listed size is about 940 MB. Save it in Android's Download folder. Never upload this file to this GitHub repository. Keep it there for now; the first test can load directly from shared Downloads if phone storage is too tight to make a second copy.
 
 ## 2. Build the Android command-line runtime for free
 
@@ -63,6 +63,7 @@ find ~/llama -type f -name llama-cli
 cd ~
 git clone https://github.com/Thunder2700c/HuTao-Offline-AI.git
 cd HuTao-Offline-AI
+# Use the model under ~/models if you copied it. If not, use the Downloads path shown below.
 python scripts/check_model.py ~/models/Qwen3-1.7B-abliterated.Q3_K_M.gguf
 python -m unittest discover -s tests -v
 ```
@@ -76,6 +77,11 @@ export LLAMA_CLI="$HOME/llama/bin/llama-cli"
 export LD_LIBRARY_PATH="$HOME/llama/lib:$HOME/llama/lib64:${LD_LIBRARY_PATH:-}"
 chmod +x scripts/run_model.sh
 ./scripts/run_model.sh
+```
+
+If you did not copy the model into ~/models, pass its Downloads path as the first argument:
+```bash
+./scripts/run_model.sh ~/storage/downloads/Qwen3-1.7B-abliterated.Q3_K_M.gguf
 ```
 
 If the artifact's installed directory is nested one level deeper, use that actual path. The first launch may take time to load the model. Start with a 2,048-token context; do not increase it until stability and memory use are measured.
