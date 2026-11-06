@@ -48,7 +48,7 @@ cp ~/storage/downloads/Qwen3-1.7B-abliterated.Q3_K_M.gguf ~/models/
 Extract the Actions artifact ZIP. Adjust the ZIP name if the browser saved a different name:
 
 ```bash
-unzip ~/storage/downloads/llama-cli-android-arm64.zip -d ~/llama
+unzip ~/storage/downloads/llama-cli-android-arm64.zip -d ~/
 ```
 
 The artifact contains an installed `bin/` and, if needed, `lib/` directory. Locate the executable:
