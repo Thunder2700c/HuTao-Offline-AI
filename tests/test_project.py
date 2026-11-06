@@ -20,7 +20,7 @@ class ProjectFoundationTests(unittest.TestCase):
     def test_prompt_contains_character_contract_and_no_memory_default(self) -> None:
         prompt = build_system_prompt(ROOT)
         self.assertIn("Hu Tao", prompt)
-        self.assertIn("Do not invent canon facts", prompt)
+        self.assertIn("Never invent canon facts", prompt)
         self.assertIn("No approved memory notes", prompt)
 
     def test_prompt_includes_only_explicit_memory_notes(self) -> None:
