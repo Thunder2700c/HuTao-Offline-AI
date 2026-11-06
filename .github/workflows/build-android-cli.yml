@@ -20,6 +20,8 @@ jobs:
   build:
     runs-on: ubuntu-24.04
     timeout-minutes: 45
+    env:
+      LLAMA_CPP_REF: ${{ inputs.llama_cpp_ref || 'master' }}
     steps:
       - name: Check out Hu Tao project
         uses: actions/checkout@v4
@@ -38,8 +40,6 @@ jobs:
           "$SDKMANAGER" --install "ndk;27.2.12479018"
 
       - name: Check out llama.cpp
-        env:
-          LLAMA_CPP_REF: ${{ inputs.llama_cpp_ref }}
         run: |
           git clone --depth 1 --branch "$LLAMA_CPP_REF" https://github.com/ggml-org/llama.cpp.git upstream/llama.cpp
           git -C upstream/llama.cpp rev-parse HEAD | tee llama-cpp-commit.txt
@@ -71,7 +71,7 @@ jobs:
             echo "Target: Android arm64-v8a"
             echo "Android API: 28"
             echo "NDK: 27.2.12479018"
-            echo "llama.cpp ref: ${{ inputs.llama_cpp_ref }}"
+            echo "llama.cpp ref: $LLAMA_CPP_REF"
             echo "llama.cpp commit: $(cat llama-cpp-commit.txt)"
             echo "Build date: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
           } > package/llama/BUILD_INFO.txt
