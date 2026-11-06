@@ -1,6 +1,10 @@
 name: Build Android llama.cpp CLI
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/build-android-cli.yml"
   workflow_dispatch:
     inputs:
       llama_cpp_ref:
