@@ -60,12 +60,14 @@ jobs:
             -DLLAMA_OPENSSL=OFF \
             -DCMAKE_INSTALL_PREFIX="$GITHUB_WORKSPACE/package/llama"
 
-      - name: Build and install llama-cli
+      - name: Build and package llama-cli
         run: |
           cmake --build build-android --config Release --parallel 4 --target llama-cli
-          cmake --install build-android --prefix "$GITHUB_WORKSPACE/package/llama" --config Release
+          mkdir -p package/llama/bin package/llama/lib package/llama/share
+          cp build-android/bin/llama-cli package/llama/bin/
+          find build-android/bin -maxdepth 1 -type f -name 'lib*.so' -exec cp {} package/llama/lib/ \\;
           test -x package/llama/bin/llama-cli
-          mkdir -p package/llama/share
+          test -n "$(find package/llama/lib -maxdepth 1 -type f -name 'lib*.so' -print -quit)"
           cp upstream/llama.cpp/LICENSE package/llama/share/LLAMA_CPP_LICENSE
           {
             echo "Target: Android arm64-v8a"
