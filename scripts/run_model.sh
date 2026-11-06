@@ -28,5 +28,6 @@ exec "$LLAMA_CLI" \
   --system-prompt-file "$PROMPT_FILE" \
   --jinja \
   --chat-template-kwargs '{"enable_thinking":false}' \
+  --reasoning off \
   --reasoning-format none \
-  --conversation
+  --offline
