@@ -34,9 +34,8 @@ jobs:
           git -C upstream/llama.cpp rev-parse HEAD | tee llama-cpp-commit.txt
 
       - name: Configure Android arm64 build
-        env:
-          ANDROID_NDK: ${{ env.ANDROID_HOME }}/ndk/27.2.12479018
         run: |
+          export ANDROID_NDK="$ANDROID_HOME/ndk/27.2.12479018"
           cmake -S upstream/llama.cpp -B build-android \
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_TOOLCHAIN_FILE="$ANDROID_NDK/build/cmake/android.toolchain.cmake" \
