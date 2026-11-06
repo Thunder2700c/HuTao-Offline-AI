@@ -1,0 +1,28 @@
+# Model weights and binary artifacts
+*.gguf
+*.ggml
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.onnx
+*.tflite
+*.apk
+*.aab
+*.zip
+
+# Private local memory and conversations
+data/memory.json
+data/memory.jsonl
+data/conversations/
+*.chatlog
+*.transcript
+
+# Generated files
+tmp/
+build/
+dist/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.DS_Store

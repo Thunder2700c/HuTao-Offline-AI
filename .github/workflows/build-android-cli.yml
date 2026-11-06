@@ -1,0 +1,81 @@
+name: Build Android llama.cpp CLI
+
+on:
+  workflow_dispatch:
+    inputs:
+      llama_cpp_ref:
+        description: llama.cpp branch, tag, or commit to build
+        required: true
+        default: master
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Check out Hu Tao project
+        uses: actions/checkout@v4
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android NDK
+        run: sdkmanager --install "ndk;27.2.12479018"
+
+      - name: Check out llama.cpp
+        env:
+          LLAMA_CPP_REF: ${{ inputs.llama_cpp_ref }}
+        run: |
+          git clone --depth 1 --branch "$LLAMA_CPP_REF" https://github.com/ggml-org/llama.cpp.git upstream/llama.cpp
+          git -C upstream/llama.cpp rev-parse HEAD | tee llama-cpp-commit.txt
+
+      - name: Configure Android arm64 build
+        env:
+          ANDROID_NDK: ${{ env.ANDROID_HOME }}/ndk/27.2.12479018
+        run: |
+          cmake -S upstream/llama.cpp -B build-android \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_TOOLCHAIN_FILE="$ANDROID_NDK/build/cmake/android.toolchain.cmake" \
+            -DANDROID_ABI=arm64-v8a \
+            -DANDROID_PLATFORM=android-28 \
+            -DGGML_CPU_KLEIDIAI=ON \
+            -DGGML_NATIVE=OFF \
+            -DGGML_OPENMP=OFF \
+            -DGGML_LLAMAFILE=OFF \
+            -DGGML_VULKAN=OFF \
+            -DLLAMA_OPENSSL=OFF \
+            -DCMAKE_INSTALL_PREFIX="$GITHUB_WORKSPACE/package/llama"
+
+      - name: Build and install llama-cli
+        run: |
+          cmake --build build-android --config Release --parallel 4 --target llama-cli
+          cmake --install build-android --prefix "$GITHUB_WORKSPACE/package/llama" --config Release
+          test -x package/llama/bin/llama-cli
+          mkdir -p package/llama/share
+          cp upstream/llama.cpp/LICENSE package/llama/share/LLAMA_CPP_LICENSE
+          {
+            echo "Target: Android arm64-v8a"
+            echo "Android API: 28"
+            echo "NDK: 27.2.12479018"
+            echo "llama.cpp ref: ${{ inputs.llama_cpp_ref }}"
+            echo "llama.cpp commit: $(cat llama-cpp-commit.txt)"
+            echo "Build date: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          } > package/llama/BUILD_INFO.txt
+          find package/llama -maxdepth 3 -type f -print
+
+      - name: Package Android runtime
+        run: |
+          cd package
+          zip -r ../llama-cli-android-arm64.zip llama
+
+      - name: Upload runtime artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: llama-cli-android-arm64
+          path: llama-cli-android-arm64.zip
+          if-no-files-found: error
+          retention-days: 30

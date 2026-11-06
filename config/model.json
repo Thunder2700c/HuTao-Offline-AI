@@ -1,0 +1,27 @@
+{
+  "id": "hutao-base-qwen3-1.7b-abliterated-q3km",
+  "upstream_model": "mlabonne/Qwen3-1.7B-abliterated",
+  "gguf_repository": "mradermacher/Qwen3-1.7B-abliterated-GGUF",
+  "file": "Qwen3-1.7B-abliterated.Q3_K_M.gguf",
+  "quantization": "Q3_K_M",
+  "published_size": "940 MB",
+  "license": "Apache-2.0 (as displayed by the GGUF repository; verify upstream terms before redistribution)",
+  "download_page": "https://huggingface.co/mradermacher/Qwen3-1.7B-abliterated-GGUF/tree/main",
+  "direct_download": "https://huggingface.co/mradermacher/Qwen3-1.7B-abliterated-GGUF/resolve/main/Qwen3-1.7B-abliterated.Q3_K_M.gguf?download=true",
+  "runtime": {
+    "context_size": 2048,
+    "threads": 6,
+    "max_new_tokens": 256,
+    "temperature": 0.8,
+    "top_p": 0.9,
+    "repeat_penalty": 1.1,
+    "thinking": false,
+    "gpu_layers": 0
+  },
+  "notes": [
+    "This is a pretrained third-party model, not a model trained from scratch by this project.",
+    "The Q3_K_M quant is the first low-storage baseline, not a final quality decision.",
+    "Abliteration does not guarantee zero refusals or unchanged reasoning quality.",
+    "CPU inference is the initial Android baseline; Xclipse GPU acceleration is not assumed."
+  ]
+}
