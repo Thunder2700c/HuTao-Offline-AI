@@ -65,7 +65,9 @@ jobs:
           cmake --build build-android --config Release --parallel 4 --target llama-cli
           mkdir -p package/llama/bin package/llama/lib package/llama/share
           cp build-android/bin/llama-cli package/llama/bin/
-          find build-android/bin -maxdepth 1 -type f -name 'lib*.so' -exec cp {} package/llama/lib/ \\;
+          for lib in build-android/bin/lib*.so; do
+            [ -f "$lib" ] && cp "$lib" package/llama/lib/
+          done
           test -x package/llama/bin/llama-cli
           test -n "$(find package/llama/lib -maxdepth 1 -type f -name 'lib*.so' -print -quit)"
           cp upstream/llama.cpp/LICENSE package/llama/share/LLAMA_CPP_LICENSE
