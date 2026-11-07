@@ -1,110 +1,96 @@
-# Android first-run guide
+# Android first-run guide — CLI test only
 
-Target device: Samsung Galaxy S23 FE (Exynos 2200, 8 GB RAM). The first run is a CPU-only baseline. Do not assume Xclipse 920 GPU offload is available.
+**Important:** There is no installable Hu Tao APK yet. The current downloadable runtime is a command-line llama.cpp build for Android arm64. You do not upload the model to GitHub and you do not install a Hu Tao app at this stage.
 
-## 1. Download the model
+Target device: Samsung Galaxy S23 FE, Exynos 2200, 8 GB RAM. First test is CPU-only. Do not assume Xclipse 920 GPU offload.
 
-From the Hugging Face file page, download exactly:
+## 1. Keep the model on your phone
+
+The expected file is:
 
 `Qwen3-1.7B-abliterated.Q3_K_M.gguf`
 
-Repository: <https://huggingface.co/mradermacher/Qwen3-1.7B-abliterated-GGUF/tree/main>
+Keep it in Android's **Download** folder. **Do not upload it to GitHub.** Do not create a second 940 MB copy unless necessary; the Termux shared-storage path can read the Downloads file directly.
 
-The listed size is about 940 MB. Save it in Android's Download folder. Never upload this file to this GitHub repository. Keep it there for now; the first test can load directly from shared Downloads if phone storage is too tight to make a second copy.
+## 2. Download the already-built Android runtime
 
-## 2. Build the Android command-line runtime for free
+Open the successful [Android runtime build](https://github.com/Thunder2700c/HuTao-Offline-AI/actions/runs/42168343114).
 
-This repository includes a manual GitHub Actions workflow that cross-compiles llama.cpp for Android arm64:
+1. Sign in to GitHub if prompted.
+2. Scroll to **Artifacts**.
+3. Download `llama-cli-android-arm64`.
+4. Save the ZIP in your phone's Download folder.
 
-1. Open this repository on GitHub.
-2. Open **Actions**.
-3. Select **Build Android llama.cpp CLI**.
-4. Press **Run workflow** and keep the default `master` ref.
-5. When it finishes successfully, open the run and download the `llama-cli-android-arm64` artifact.
-6. Save the ZIP in Android's Download folder.
+This artifact is about 53.5 MB and expires on **2026-12-06 05:29 UTC**. It is an engine, not an APK.
 
-The workflow builds the engine, not the model. It uses a standard GitHub-hosted public-repository runner; no paid GPU runner is requested.
+## 3. Install Termux
 
-## 3. Install Termux and prepare files
+Install Termux from its official F-Droid listing or official GitHub releases. Do not mix Termux and add-ons from different sources.
 
-Install Termux from its official F-Droid listing or official GitHub releases. Avoid mixing Termux and add-ons installed from different sources.
-
-In Termux:
+Open Termux and run:
 
 ```bash
 pkg update
 pkg upgrade -y
 pkg install git python unzip
 termux-setup-storage
-mkdir -p ~/models ~/llama
+mkdir -p ~/llama
 ```
 
-Grant the storage permission when Android asks. Copy the model from shared Downloads into Termux's private home directory:
+Grant storage access when Android asks.
 
-```bash
-cp ~/storage/downloads/Qwen3-1.7B-abliterated.Q3_K_M.gguf ~/models/
-```
-
-Extract the Actions artifact ZIP. Adjust the ZIP name if the browser saved a different name:
+## 4. Extract the runtime and get the project
 
 ```bash
 unzip ~/storage/downloads/llama-cli-android-arm64.zip -d ~/
-```
-
-The artifact contains an installed `bin/` and, if needed, `lib/` directory. Locate the executable:
-
-```bash
-find ~/llama -type f -name llama-cli
-```
-
-## 4. Clone this small source repository
-
-```bash
-cd ~
 git clone https://github.com/Thunder2700c/HuTao-Offline-AI.git
-cd HuTao-Offline-AI
-# Use the model under ~/models if you copied it. If not, use the Downloads path shown below.
-python scripts/check_model.py ~/models/Qwen3-1.7B-abliterated.Q3_K_M.gguf
-python -m unittest discover -s tests -v
+cd ~/HuTao-Offline-AI
 ```
 
-## 5. Run the first conversation
+If the browser saved the ZIP with a different filename, use that actual filename. Locate the executable:
 
-Set the executable path to the path printed by `find`. Example:
+```bash
+find ~ -type f -name llama-cli
+```
+
+Set the path to the result. The expected layout after extraction is usually `~/llama/bin/llama-cli` or `~/llama/llama/bin/llama-cli` depending on the ZIP's top-level folder.
+
+For example:
 
 ```bash
 export LLAMA_CLI="$HOME/llama/bin/llama-cli"
-export LD_LIBRARY_PATH="$HOME/llama/lib:$HOME/llama/lib64:${LD_LIBRARY_PATH:-}"
-chmod +x scripts/run_model.sh
-./scripts/run_model.sh
 ```
 
-If you did not copy the model into ~/models, pass its Downloads path as the first argument:
+If your `find` result is different, use that exact path instead. Add the matching library directory:
+
 ```bash
+export LD_LIBRARY_PATH="$(dirname "$LLAMA_CLI")/../lib:$(dirname "$LLAMA_CLI")/../lib64:${LD_LIBRARY_PATH:-}"
+```
+
+## 5. Validate the model in Downloads
+
+Run:
+
+```bash
+python scripts/check_model.py ~/storage/downloads/Qwen3-1.7B-abliterated.Q3_K_M.gguf
+python -m unittest discover -s tests -v
+```
+
+The validator checks the GGUF header and expected file-size range and prints a SHA-256 hash. Keep that hash in your own private notes; do not commit the model or its private usage logs.
+
+## 6. Start the baseline model
+
+```bash
+chmod +x scripts/run_model.sh
 ./scripts/run_model.sh ~/storage/downloads/Qwen3-1.7B-abliterated.Q3_K_M.gguf
 ```
 
-If the artifact's installed directory is nested one level deeper, use that actual path. The first launch may take time to load the model. Start with a 2,048-token context; do not increase it until stability and memory use are measured.
+Start with the default 2,048-token context and six CPU threads. The first model load can take time. The base model may not yet behave like the completed Hu Tao project: this is only a local inference smoke test. The imported life memories are not yet a trained character model.
 
-## 6. What to test
+If Android kills Termux or the process, close other apps and retry. Do not increase context until memory use and stability are measured. Stop if the phone becomes uncomfortably hot.
 
-Start with these checks, one at a time:
+## 7. What happens after this test
 
-- Can it hold a coherent conversation for at least 10 turns?
-- Does it retain the point of the conversation without repeating itself?
-- Does its humour feel natural rather than inserted into every reply?
-- Can it disagree without becoming hostile?
-- Does it distinguish known Genshin canon from invented details?
-- Does it ever emit visible `<think>` text despite thinking being disabled?
+After the runtime and model work, we will complete/review the former-life memories, build Hu Tao-specific training/adaptation and memory/cognition systems, and only then create the native Android app.
 
-Record results in a local note. Do not paste private conversation transcripts into public issues or commits.
-
-## Troubleshooting
-
-- **Killed / app closes:** Android may have reclaimed Termux or the process may have exceeded available memory. Close other apps, reboot, keep context at 2,048 or lower, and retry.
-- **Not enough storage:** Do not delete Genshin or personal data blindly. The engine build artifact and model both need space. Check free storage first.
-- **Missing shared library:** set `LD_LIBRARY_PATH` to the artifact's `lib` directory. If no `lib` directory exists, remove that path from the variable.
-- **Unknown option:** update the Android llama.cpp artifact by rerunning the workflow; its CLI flags follow the upstream revision built into that artifact.
-- **Slow generation / heat:** CPU-only inference can be slow and warm the phone. Stop if the device becomes uncomfortably hot. GPU acceleration is a later, separately benchmarked task.
-
-The native Android app is a later milestone. This CLI step verifies the model and the phone before app development adds another layer of variables.
+**Later app behaviour:** the finished app is intended to have an Import Model button/file picker, so you can select the GGUF from Downloads. That app does not exist yet; for now use the Termux CLI instructions above.
