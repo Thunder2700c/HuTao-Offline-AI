@@ -1,32 +1,38 @@
-# Data, consent, and privacy policy
+# Data, memory, consent, and privacy
 
-## Default privacy behaviour
+## Character-memory integrity
 
-- All prompts, memory notes, and conversation records are local to the device.
-- No network request is required for inference after the model and runtime are installed.
-- This repository must not contain private conversation logs, private memory exports, or user identifiers.
-- Private user conversations are not training data by default.
-- A user must explicitly opt in before a proposed export or training-data contribution. Consent must state what will be copied, where it will go, and whether the copy can be deleted.
+- The imported `character/life_memories.jsonl` archive is the starter autobiographical foundation.
+- Preserve source IDs, chronology, review state, perspective, and canon/AU labels.
+- Never silently convert public Teyvat reference material into a personal memory.
+- Never invent missing childhood, family, daily-life, or death details to fill gaps.
+- The phone-awakening AU is not official Genshin canon. Keep it labelled as user-created continuity.
+- Hu Tao's knowledge is limited to what she witnessed and what she could plausibly hear, read, or learn publicly. Traveler-only secrets stay excluded.
 
-## Training-data admission rules
+## Device privacy defaults
 
-Before any dataset is added, record:
+- Model inference, prompts, transcripts, and personal memory should remain on the phone.
+- No cloud inference, analytics, or automatic conversation upload.
+- This public repository must never contain private chat transcripts, personal memory exports, account identifiers, or private backups.
+- User conversations are not training data by default.
+- Any future opt-in training export must clearly state what is copied, where it goes, and whether the copy can be deleted.
 
-- Exact dataset name, version, source URL, download date, and file hashes.
-- Original authorship/provenance (human-written, synthetic, or model-generated).
-- Licence and any non-commercial, share-alike, attribution, or redistribution restrictions.
-- Which fields are retained and which are excluded.
-- Deduplication, personal-data filtering, and train/validation/test split methodology.
+## Persistent memory and backup
 
-Do not silently mix non-commercial sources into a model intended for commercial distribution. Do not describe model-generated or teacher-generated text as human-authored. Do not add scraped dialogue whose rights and provenance are unclear.
+- Conversation history and autobiographical memory are separate stores.
+- The transcript is chronological and append-only by default; corrections and deletions must be explicit.
+- Long-term memories should be reviewed, corrected, and removable.
+- App-private storage alone is insufficient: Android Clear storage and uninstall can erase it.
+- The native app must provide an encrypted, user-owned backup outside app-private storage and a tested restore flow. This is not implemented yet.
 
-## Hu Tao character data
+## Training-data admission
 
-- Use game canon as a source only when the source can be identified and reviewed.
-- Label fan interpretation and project fiction separately from canon.
-- Do not invent missing biographical details to fill a training example.
-- Do not use user-written roleplay or private chats as training examples without explicit permission.
+For every dataset, record exact name, version, source URL, date, hashes, authorship/provenance, licence, retained fields, filtering, deduplication, and train/validation/test methodology.
 
-## Model and code licences
+Do not describe model-generated text as human-authored. Do not use private user conversations without explicit opt-in. Do not mix non-commercial datasets into a distributable model without resolving their licence restrictions. Use original paraphrases and original dialogue examples rather than reproducing full game scripts, voice lines, audio, or game files.
 
-The current GGUF repository displays Apache-2.0. Preserve upstream notices and verify the source model card, quantization repository, and any subsequent dataset licences before redistributing weights or publishing adapted weights. The application code's licence does not override model or dataset licences.
+## Model provenance
+
+The current base is a third-party pretrained Qwen3 GGUF. Preserve the upstream model card, quantization repository, licence notices, file hash, and exact runtime configuration. Abliteration does not guarantee zero refusals or unchanged reasoning quality. Review all upstream and dataset terms before distributing any adapted model.
+
+The engineering implementation is software. The in-character premise is that Hu Tao continues from her former life; do not claim the software proves literal reincarnation or consciousness.
