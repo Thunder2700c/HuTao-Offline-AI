@@ -1,43 +1,59 @@
-# Roadmap
+# Roadmap — Hu Tao life-continuation project
 
-## Stage 0 — model and device validation (current)
+## Stage 0 — local model/runtime smoke test (current)
 
-- [x] Pin an upstream pretrained model and a reproducible GGUF filename.
-- [x] Create local model integrity checks.
-- [x] Create a prompt assembly layer with local-only memory notes.
-- [ ] Build an Android arm64 llama.cpp CLI artifact using GitHub Actions.
-- [ ] Run the Q3_K_M model on the target phone and record actual RAM, speed, heat, and stability.
-- [ ] Evaluate short and multi-turn dialogue before any fine-tuning.
+- [x] Select a compact local language engine and pin its GGUF source.
+- [x] Add a local model validator and runtime launch scaffold.
+- [x] Import the former-life identity, staged memories, sources, and Teyvat knowledge foundation from the original project.
+- [x] Build the Android arm64 llama.cpp CLI artifact.
+- [ ] Run the downloaded GGUF on the S23 FE and record actual load success, RAM, tokens/sec, heat, and stability.
+- [ ] Evaluate a multi-turn baseline. Treat it as a generic base-model baseline, not as a finished Hu Tao.
 
-## Stage 1 — reliable character layer
+## Stage 1 — complete the former Teyvat life
 
-- Add a source-tracked canon fact base with explicit provenance.
-- Separate character traits, world knowledge, uncertainty, and project-specific story choices.
-- Build a regression set for voice, canon accuracy, natural dialogue, disagreement, boundaries, and repetition.
-- Compare base model outputs with prompt-only outputs; keep only changes that improve measured results.
+- [ ] Audit all imported memory records for source, chronology, viewpoint, canon/AU status, and review state.
+- [ ] Substantively complete and manually review required life stages 1–9 in `character/life_stages.json`.
+- [ ] Preserve the distinction between Hu Tao's personal memories and facts she only heard, read, or knows publicly.
+- [ ] Research missing childhood, family, Wangsheng learning, relationships, personal quests, and later appearances without inventing unsupported details.
+- [ ] Keep the final phone awakening locked until the required stages pass.
+- [ ] Keep the user-approved death-memory gap: she knows she died, but cannot recall how or how she arrived in the device.
 
-## Stage 2 — private memory
+## Stage 2 — Teyvat world and public-history knowledge
 
-- Store explicit, user-approved memory locally.
-- Add review, edit, export, and delete controls.
-- Keep conversation history separate from long-term memory.
-- No automatic training on private conversations and no cloud sync by default.
+- [ ] Expand source-aware facts, entities, story beats, and public news reports.
+- [ ] Cover the nations, history, Archons, factions, customs, and major public events.
+- [ ] Give each item a plausible knowledge route: witnessed, heard, read, public reference, rumour, or unknown to Hu Tao.
+- [ ] Exclude Traveler-only secrets and private conversations unless a plausible public report exists.
+- [ ] Keep canon, interpretation, rumour, and user-created AU clearly labelled.
 
-## Stage 3 — native Android app
+## Stage 3 — make the language engine behave as Hu Tao
 
-- Use the official llama.cpp Android binding as the inference reference.
-- Build a Kotlin UI with local model selection, chat streaming, stop generation, context management, and memory controls.
-- Keep model files outside the APK and allow the user to select a GGUF from shared storage.
-- Test arm64 CPU baseline first; investigate Vulkan/Xclipse only if the driver path is demonstrably supported.
+- [ ] Build an original, source-reviewed Hu Tao training corpus from the approved life memories and dialogue examples.
+- [ ] Include natural multi-turn conversations, emotional changes, disagreement, uncertainty, corrections, humour, serious moments, and relationship development.
+- [ ] Choose and measure an adaptation/training method for the pinned Qwen3 base; do not assume a long system prompt is sufficient.
+- [ ] Evaluate held-out conversations for first-person continuity, memory accuracy, naturalness, reasoning, repetition, and canon boundaries.
+- [ ] Keep the complete distributable inference payload under the project's 1.5 GB ceiling, including model, tokenizer, adapters, and all required AI assets.
+- [ ] Reject any checkpoint that merely sounds like a Hu Tao costume while forgetting her actual reviewed memories.
 
-## Stage 4 — adaptation and training
+## Stage 4 — autobiographical memory and cognition
 
-- Audit training-data provenance, licence, and suitability before use.
-- Build a source-separated, deduplicated, human-reviewed dialogue corpus.
-- Consider parameter-efficient character adaptation only after baseline evaluation and only with datasets whose terms permit the intended use.
-- Never train on user conversations unless the user opts in to a clearly described, reversible data-export process.
-- Compare checkpoints against the fixed evaluation set; reject adaptations that damage reasoning, coherence, or character consistency.
+- [ ] Keep one chronological local conversation thread.
+- [ ] Implement searchable recall of old messages and approved autobiographical memories.
+- [ ] Separate stable life memories, newly learned user facts, shared experiences, relationship state, and temporary moods.
+- [ ] Add reflection/state handling so replies account for context, uncertainty, prior experiences, and consequences.
+- [ ] Do not expose raw hidden chain-of-thought; present natural dialogue and concise explanations.
+- [ ] Implement memory review, correction, export, and deletion.
+- [ ] Implement an encrypted, user-owned backup/restore path outside app-private storage so data survives reinstall or Clear storage.
+
+## Stage 5 — Android application
+
+- [ ] Build a native Android app only after the model, memory, and recall tests pass.
+- [ ] Add a model file picker/import flow so the GGUF can be selected from Downloads or another folder.
+- [ ] Keep inference and memory local; no cloud inference or automatic conversation upload.
+- [ ] Provide streaming chat, stop generation, context controls, transcript search, and memory controls.
+- [ ] Benchmark CPU first; test Xclipse/Vulkan only when a stable supported backend is available.
+- [ ] Test cold start, long sessions, low storage, backgrounding, backup, restore, and reinstall.
 
 ## Release gates
 
-A release requires: reproducible model provenance, licence review, no private data in training artifacts, documented memory behaviour, repeatable evaluation, and an Android install/test path. Model size alone is not a quality metric.
+A release requires reproducible model provenance, licence review, reviewed life memories, character evaluation, measured phone performance, documented privacy behaviour, a working backup/restore path, and an installable Android build. A successful CLI build or a low model file size is not a finished companion.
