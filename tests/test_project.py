@@ -23,6 +23,16 @@ class ProjectFoundationTests(unittest.TestCase):
         self.assertIn("Never invent canon facts", prompt)
         self.assertIn("No approved memory notes", prompt)
 
+    def test_imported_former_life_archive_and_awakening_gate_exist(self) -> None:
+        stages = json.loads((ROOT / "character" / "life_stages.json").read_text(encoding="utf-8"))
+        memories = (ROOT / "character" / "life_memories.jsonl").read_text(encoding="utf-8").splitlines()
+        sources = (ROOT / "character" / "life_sources.jsonl").read_text(encoding="utf-8").splitlines()
+        self.assertGreaterEqual(len(stages["stages"]), 9)
+        self.assertGreater(len(memories), 0)
+        self.assertGreater(len(sources), 0)
+        awakening = (ROOT / "character" / "awakening.md").read_text(encoding="utf-8")
+        self.assertIn("cannot remember how", awakening)
+
     def test_prompt_includes_only_explicit_memory_notes(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             memory_path = Path(temp) / "memory.json"
